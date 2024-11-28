@@ -1,48 +1,34 @@
-name: Java CI/CD
+name: Java CI
 
 on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
 
     steps:
-      # Крок 1: Клонування репозиторію
-      - name: Checkout repository
+      # Checkout репозиторію
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      # Крок 2: Встановлення JDK
-      - name: Set up JDK 11
+      # Налаштування JDK
+      - name: Set up JDK
         uses: actions/setup-java@v3
         with:
-          java-version: '11'
-          distribution: 'temurin' # Використовується Temurin JDK (рекомендовано)
+          java-version: '17'
 
-      # Крок 3: Компіляція коду
-      - name: Compile the code
-        run: |
-          mkdir -p bin
-          javac -d bin src/com/example/*.java
-
-      # Крок 4: Завантаження бібліотек JUnit
-      - name: Download JUnit
-        run: |
-          curl -o junit-4.13.2.jar https://repo1.maven.org/maven2/junit/junit/4.13.2/junit-4.13.2.jar
-          curl -o hamcrest-core-1.3.jar https://repo1.maven.org/maven2/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar
-
-      # Крок 5: Запуск тестів
+      # Запуск тестів
       - name: Run tests
         run: |
-          javac -cp bin:junit-4.13.2.jar:hamcrest-core-1.3.jar -d bin src/com/example/CalculatorTest.java
-          java -cp bin:junit-4.13.2.jar:hamcrest-core-1.3.jar org.junit.runner.JUnitCore com.example.CalculatorTest
+          ./gradlew test
 
-      # Крок 6: Симуляція деплою
-      - name: Deploy
-        if: success()
-        run: echo "Deployed!"
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build-and-test
+
+    steps:
+      - name: Simulate deploy
+        run: echo "Deployed"
