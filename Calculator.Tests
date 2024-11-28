@@ -1,12 +1,10 @@
-// src/com/example/CalculatorTest.java
-package com.example;
+import org.junit.jupiter.api.Test;
 
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CalculatorTest {
     @Test
-    public void testAdd() {
-        assertEquals(30, Calculator.add(10, 20));
+    void testAdd() {
+        assertEquals(8, Calculator.add(3, 5));
     }
 }
